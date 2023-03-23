@@ -1,5 +1,11 @@
 <html>
     <head>
+
+        <!-- Dependencies from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+        
         <title>RAT Poison</title>
         <style>
             body 
@@ -23,6 +29,7 @@
             }
         </style>
     </head>
+
     <h1>| R A T&emsp; P O I S O N |</h1>
     <table style="width:90%; height:90%">
         <tr>
@@ -32,4 +39,17 @@
             <th background="Resources/RAT_Placeholder.jpeg"></th>
         </tr>
     </table>
+
+    <body>
+        <!-- Code taken from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal setup -->
+        <script>
+            $('body').terminal({
+                hello: function(what) {
+                    this.echo('Hello, ' + what + '. Welcome to this terminal.');
+                }
+            }, {
+                greetings: 'RAT Poison Terminal'
+            });
+        </script>
+    </body>
 </html>
