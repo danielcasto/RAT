@@ -1,5 +1,7 @@
 <html>
     <head>
+    <!--meta name="viewport" content="width=device-width"-->
+    <!-- Button hover from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_button_on_image -->
 
         <!-- Dependencies from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -7,10 +9,11 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
         
         <title>RAT Poison</title>
+        <link rel="custom_button" href="button.css">
         <style>
             body 
             {
-                background-image: url("Resources/RAT_bg1.jpeg");
+                background-image: url("Resources/Brain_BG_1.png");
                 background-size: 100%;
                 background-repeat: no-repeat;
                 color: white;
@@ -26,29 +29,135 @@
                 background-size: 100%;
                 background-repeat: no-repeat;
                 opacity: 0.5;
+
+                size: 20%;
+                font-family: "Franklin Gothic Book";
             }
+
+            .container {
+                position: relative;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .container img {
+                width: 100%;
+                height: auto;
+            }
+
+            img{
+                width: 80%;
+                height: auto;
+                object-fit: cover;
+            }
+
+            .center{
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .container .btn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                background-color: #555;
+                color: white;
+                font-size: 16px;
+                padding: 12px 24px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            .container .btn:hover
+            {
+                background-color: black;
+            }
+            
         </style>
     </head>
 
     <h1>| R A T&emsp; P O I S O N |</h1>
     <table style="width:90%; height:90%">
         <tr>
-            <th style="width: 10%">
-                <table>
-                    <tr>hi</tr>
-                    <tr>howdy</tr>
-                    <tr>why</tr>
+            <th>
+                <table style="height: 100%">
+                    <!-- Import Button -->
+                    <tr height="30%">
+                        <td>
+                            <div class="container">
+                                <img id="import" src="Resources/Import_Temp.png">
+                                <button class="btn" onclick=import_file();>Import</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>
+                    <tr height="40%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td>Put terminal here...</td></tr>
+                    <tr><td><div class="container"><button class="btn" onclick=generate();>Generate Button</button></div></td></tr>
                 </table>
             </th>
-            <th background="Resources/RAT_Placeholder.jpeg"></th>
-            <th background="Resources/RAT_Placeholder.jpeg"></th>
-            <th background="Resources/RAT_Placeholder.jpeg"></th>
+            <th>
+                <table  style="height: 100%">
+                    <tr><td><img id="result" src="Resources/Render_Placeholder.png" class="center"></td></tr>
+                    <!-- Export Button -->
+                    <tr>
+                        <td height="10%">
+                            <div class="container" style="float: right">
+                                <a href="" id = "a" class="btn" onclick="export_file('test', 'test.png', 'text/plain')">Export</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </th>
         </tr>
     </table>
-<<<<<<< Updated upstream
 
     <body>
-        <!-- Code taken from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal setup -->
+        <script>
+            function import_file()
+            {
+                // Source: https://codepen.io/udaymanvar/pen/MWaePBY //
+                let input = document.createElement('input');
+                input.type = 'file';
+                input.onchange = _ => {
+                    let files = Array.from(input.files);
+                    console.log(files);
+                };
+                input.click();
+
+                // Not Working //
+                document.getElementById('import')
+                .src=files[0]
+            }
+            function generate()
+            {
+                document.getElementById('result')
+                .src="Resources/Generate_Temp.png"
+            }
+            function reload()
+            {
+                document.getElementById('result')
+                .src="Resources/Render_Placeholder.png"
+            }
+            function export_file(text, name, type)
+            {
+                // Source: https://stackoverflow.com/questions/13405129/create-and-save-a-file-with-javascript //
+                var file = document.getElementById("a");
+                var new_file = new Blob([text], {type: type});
+                file.href = URL.createObjectURL(new_file);
+                file.download = name;
+            }
+
+        </script>
+    </body>
+
+    <!--
+    <body>
+        !-- Code taken from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal setup --
         <script>
             $('body').terminal({
                 hello: function(what) {
@@ -59,7 +168,6 @@
             });
         </script>
     </body>
-=======
-    
->>>>>>> Stashed changes
+    -->
+
 </html>
