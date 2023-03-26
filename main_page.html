@@ -135,13 +135,15 @@
             }
             function generate()
             {
-                document.getElementById('result')
-                .src="Resources/Generate_Temp.png"
+                var result = document.getElementById('result');
+                result.src="Resources/Generate_Temp.png";
+                result.style.opacity = "1.0";
             }
             function reload()
             {
-                document.getElementById('result')
-                .src="Resources/Render_Placeholder.png"
+                var result = document.getElementById('result');
+                result.src="Resources/Render_Placeholder.png";
+                result.style.opacity = "0.5";
             }
             function export_file(text, name, type)
             {
