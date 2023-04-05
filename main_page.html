@@ -9,10 +9,10 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
 
-        <!---->
+        <!--
         <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
         <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-         <!---->
+         -->
         
         <title>RAT Poison</title>
         <link rel="custom_button" href="button.css">
@@ -96,9 +96,9 @@
                         <td>
                             <div class="container">
                                 <img id="import" src="Resources/Import_Image.jpeg">
-                                <button class="btn" style="top: 25%; bottom: 75%; height: 15%" onclick=import_file();>Import 1</button>
-                                <button class="btn" style="top: 50%; bottom: 50%; height: 15%" onclick=import_file();>Import 2</button>
-                                <button class="btn" style="top: 75%; bottom: 25%; height: 15%" onclick=import_file();>Import 3</button>
+                                <button class="btn" id="input_1" style="top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import 1</button>
+                                <button class="btn" id="input_2" style="top: 50%; bottom: 50%; height: 15%" onclick=import_file(this);>Import 2</button>
+                                <button class="btn" id="input_3" style="top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import 3</button>
                             </div>
                         </td>
                     </tr>
@@ -117,7 +117,7 @@
                     <tr>
                         <td height="10%">
                             <div class="container" style="float: right">
-                                <a href="" id = "a" class="btn" onclick="export_file('test', 'Resources/Generate_Temp.png', 'text/plain')">Export</a>
+                                <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
                             </div>
                         </td>
                     </tr>
@@ -128,38 +128,65 @@
 
     <body>
         <py-script type="module">
-            import test.py
+            #import test.py
 
-            execfile('test.py')
+            #execfile('test.py')
         </py-script>
         <script>
             //import {PythonShell} from 'python-shell';
 
             //const {PythonShell} =require('python-shell');
 
-            function import_file()
+            // Input files //
+            var input_1;
+            var input_2;
+            var input_3;
+
+            function import_file(button)
             {
                 // Source: https://codepen.io/udaymanvar/pen/MWaePBY //
                 let input = document.createElement('input');
                 input.type = 'file';
+                var file_name = "";
+
+                // Filter File Type -- TODO -- Change to correct file types //
+                if(button.id == "input_1")
+                    input.accept = '.png'
+                else if(button.id == "input_2")
+                    input.accept = '.jpeg'
+                else if(button.id == "input_3")
+                    input.accept = '.txt'
+
                 input.onchange = _ => {
                     let files = Array.from(input.files);
+                    file_name = files[0].name;
+
+                    // Change Button Name //
+                    button.innerText=file_name;
+
                     console.log(files);
+
+                    // Fill in Needed Files //
+                    if(button.id == "input_1")
+                        input_1 = files[0];
+                    else if(button.id == "input_2")
+                        input_2 = files[0];
+                    else if(button.id == "input_3")
+                        input_3 = files[0];
                 };
+
                 input.click();
+                //URL.revokeObjectURL(input.href)
+              
 
-                // Not Working //
-                document.getElementById('import')
-                .src=files[0]
-
-                var atlas; // Atlas File
-                var mri; // Importated MRI File
             }
             // Run Back-end Code here! //
             function generate()
             {
                 var result = document.getElementById('result');
-                result.src="Resources/Generate_Temp.png";
+                //result.src="Resources/Generate_Temp.png";
+                // Need to change this to actual generation //
+                result.src="Resources/" + input_1.name;
                 result.style.opacity = "1.0";
 
                 // Attempt 1 //
@@ -194,8 +221,13 @@
             function export_file(text, name, type)
             {
                 // Source: https://stackoverflow.com/questions/13405129/create-and-save-a-file-with-javascript //
-                var file = document.getElementById("a");
+                var file = document.getElementById("export_button");
                 var new_file = new Blob([text], {type: type});
+
+                // For testing only -- TODO //
+                new_file = input_1;
+
+                // Save File
                 file.href = URL.createObjectURL(new_file);
                 file.download = name;
             }
