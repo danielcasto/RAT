@@ -12,7 +12,7 @@
         <!---->
         <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
         <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-        <!---->
+         <!---->
         
         <title>RAT Poison</title>
         <link rel="custom_button" href="button.css">
@@ -127,14 +127,15 @@
     </table>
 
     <body>
-        <py-script>
-            #import test.py
+        <py-script type="module">
+            import test.py
 
-            #execfile('test.py')
+            execfile('test.py')
         </py-script>
         <script>
-            //import {PythonShell} from
-            //' python-shell';
+            //import {PythonShell} from 'python-shell';
+
+            //const {PythonShell} =require('python-shell');
 
             function import_file()
             {
