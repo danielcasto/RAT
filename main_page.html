@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
     <!--meta name="viewport" content="width=device-width"-->
@@ -7,6 +8,11 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+
+        <!---->
+        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        <!---->
         
         <title>RAT Poison</title>
         <link rel="custom_button" href="button.css">
@@ -89,8 +95,10 @@
                     <tr height="30%">
                         <td>
                             <div class="container">
-                                <img id="import" src="Resources/Import_Temp.png">
-                                <button class="btn" onclick=import_file();>Import</button>
+                                <img id="import" src="Resources/Import_Image.jpeg">
+                                <button class="btn" style="top: 25%; bottom: 75%; height: 15%" onclick=import_file();>Import 1</button>
+                                <button class="btn" style="top: 50%; bottom: 50%; height: 15%" onclick=import_file();>Import 2</button>
+                                <button class="btn" style="top: 75%; bottom: 25%; height: 15%" onclick=import_file();>Import 3</button>
                             </div>
                         </td>
                     </tr>
@@ -119,7 +127,15 @@
     </table>
 
     <body>
+        <py-script>
+            #import test.py
+
+            #execfile('test.py')
+        </py-script>
         <script>
+            //import {PythonShell} from
+            //' python-shell';
+
             function import_file()
             {
                 // Source: https://codepen.io/udaymanvar/pen/MWaePBY //
@@ -134,6 +150,9 @@
                 // Not Working //
                 document.getElementById('import')
                 .src=files[0]
+
+                var atlas; // Atlas File
+                var mri; // Importated MRI File
             }
             // Run Back-end Code here! //
             function generate()
@@ -142,7 +161,23 @@
                 result.src="Resources/Generate_Temp.png";
                 result.style.opacity = "1.0";
 
-                // Run Python Script //
+                // Attempt 1 //
+                /*PythonShell.run(
+                    'test.py',
+                    null,
+                    function(err){
+                        if(err) throw err;
+                        console.log('finished');
+                    }
+                )
+                // Attempt 2
+                $.ajax({
+                    url:"test.py",
+                    context: document.body
+                }).done(function() {
+                    alert('finished python script');;
+                });
+                */
                 var update = document.createTextNode("\nPython File Running...");
 
                 document.getElementById("terminal").appendChild(update);
