@@ -9,6 +9,11 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
 
+        <!-- REACT -->
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
         <!--
         <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
         <script defer src="https://pyscript.net/latest/pyscript.js"></script>
@@ -107,7 +112,7 @@
                     <!-- Terminal -->
                     <tr height="40%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td id="terminal"><div style="overflow:auto">Put terminal here...</div></td></tr>
                     <!-- Generate Button -->
-                    <tr><td><div class="container"><button class="btn" onclick=generate();>Generate Button</button></div></td></tr>
+                    <tr><td><div class="container" style="height:100%"><button class="btn" onclick=generate();>Generate Button</button></div></td></tr>
                 </table>
             </th>
             <th>
@@ -184,9 +189,9 @@
             function generate()
             {
                 var result = document.getElementById('result');
-                //result.src="Resources/Generate_Temp.png";
+                
                 // Need to change this to actual generation //
-                result.src="Resources/" + input_1.name;
+                result.src="Resources/Generate_Temp.png";
                 result.style.opacity = "1.0";
 
                 // Attempt 1 //
