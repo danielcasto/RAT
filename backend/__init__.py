@@ -1,3 +1,3 @@
-from visualization import *
-from masker import *
-from atlas import *
+from .visualization import *
+from .masker import *
+from .atlas import *
