@@ -109,14 +109,17 @@
                     </tr>
                     <!-- Reload Button -->
                     <tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>
-                    <!-- Terminal -->
-                    <tr height="40%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td id="terminal"><div style="overflow:auto">Put terminal here...</div></td></tr>
+                    <!-- "Terminal" -->
+                    <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td id="terminal">
+                        <div style="overflow:auto">
+                            <p id="action"> Welcome to RAT Poison </p>
+                        </div></td></tr>
                     <!-- Generate Button -->
                     <tr><td><div class="container" style="height:100%"><button class="btn" onclick=generate();>Generate Button</button></div></td></tr>
                 </table>
             </th>
             <th>
-                <table  style="height: 100%">
+                <table style="height: 100%">
                     <tr><td><img id="result" src="Resources/Render_Placeholder.png" class="center"></td></tr>
                     <!-- Export Button -->
                     <tr>
@@ -127,6 +130,20 @@
                         </td>
                     </tr>
                 </table>
+            </th>
+            <!-- ROIs Checkbox Table -->
+            <th width="7.5%">
+                <header style="margin-bottom: 30px;">Select ROIs</header>
+                <input type="checkbox" id="roi1" name="roi1" value="ROI1">
+                <label for="roi1"> ROI 1</label><br>
+                <input type="checkbox" id="roi2" name="roi2" value="ROI2">
+                <label for="roi2"> ROI 2</label><br>
+                <input type="checkbox" id="roi3" name="roi3" value="ROI3">
+                <label for="roi3"> ROI 3</label><br>
+                <input type="checkbox" id="roi4" name="roi4" value="ROI4">
+                <label for="roi4"> ROI 4</label><br>
+                <input type="checkbox" id="roi5" name="roi5" value="ROI5">
+                <label for="roi5"> ROI 5</label><br>
             </th>
         </tr>
     </table>
@@ -149,6 +166,9 @@
 
             function import_file(button)
             {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Import " + button.id[6] + " has been pressed!";
+
                 // Source: https://codepen.io/udaymanvar/pen/MWaePBY //
                 let input = document.createElement('input');
                 input.type = 'file';
@@ -188,6 +208,9 @@
             // Run Back-end Code here! //
             function generate()
             {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Generate has been pressed!";
+
                 var result = document.getElementById('result');
                 
                 // Need to change this to actual generation //
@@ -211,20 +234,26 @@
                     alert('finished python script');;
                 });
                 */
-                var update = document.createTextNode("\nPython File Running...");
+                //var update = document.createTextNode("\nPython File Running...");
 
-                document.getElementById("terminal").appendChild(update);
+                //document.getElementById("action").appendChild(update);
 
                 // Matplot //
             }
             function reload()
             {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Reload has been pressed!";
+
                 var result = document.getElementById('result');
                 result.src="Resources/Render_Placeholder.png";
                 result.style.opacity = "0.5";
             }
             function export_file(text, name, type)
             {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Export has been pressed!";
+
                 // Source: https://stackoverflow.com/questions/13405129/create-and-save-a-file-with-javascript //
                 var file = document.getElementById("export_button");
                 var new_file = new Blob([text], {type: type});
