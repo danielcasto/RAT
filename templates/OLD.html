@@ -62,16 +62,23 @@
 
             .container .btn {
                 position: absolute;
-                top: 50%;   
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
                 background-color: #555;
                 color: white;
                 font-size: 16px;
-                padding: 24px 24px;
+                padding: 12px 24px;
                 border: none;
                 cursor: pointer;
                 border-radius: 5px;
                 text-align: center;
-                align-items: center;
+            }
+
+            .container .btn:hover
+            {
+                background-color: black;
             }
             
         </style>
@@ -81,41 +88,33 @@
     <table style="width:100%; height:90%; table-layout:fixed">
         <tr>
             <th width="15%">
-                <form id="file_form" method="post" action="/upload">
+                <form id="file_form" method="post">
                     <table style="height: 100%" width="100%">
                         <!-- Import Button -->
                         <tr height="30%">
                             <td>
-                                <div class="container" src="static/resources/Import_Image.jpeg">
-                                    <!--
+                                <div class="container">
+                                    <img id="import" src="static/resources/Import_Image.jpeg">
                                     <button class="btn" id="input_1" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import Image File</button>
                                     <button class="btn" id="input_2" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
-                                    -->
-                                    <label for="input_1">Import Image File</label><br>
-                                    <input type="file" id="input_1" accept=".nii.gz" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%"><br><br>
-                                    <label for="input_2">Import Mask File</label><br>
-                                    <input type="file" id="input_2" accept=".nii.gz" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%"><br><br>
                                 </div>
                             </td>
                         </tr>
                         <!-- Reload Button -->
-                        <!--<tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>-->
+                        <tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>
                         <!-- "Terminal" -->
-                        <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace; height:50%";><td id="terminal">
+                        <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td id="terminal">
                             <div style="overflow:auto">
                                 <p id="action"> Welcome to RAT Poison! </p>
                             </div></td></tr>
                         <!-- Generate Button -->
-                        <tr style="height: 20%"><td margin="auto"><div class="container" style="height:100%">
-                            <br><button class="btn" onclick=generate()>Generate</button>
-                            <!--<button class="btn" type="submit">Generate</button>-->
-                        </div></td></tr>
+                        <tr><td><div class="container" style="height:100%"><input type="submit" class="btn" onclick=generate();>Generate Button</button></div></td></tr>
                     </table>
                 </form>
             </th>
             <!-- ROIs Checkbox Table -->
             <th width="7.5%">
-                <header style="margin-bottom: 30px;">Active ROI:</header>
+                <header style="margin-bottom: 30px;">Select ROIs</header>
                 <input type="checkbox" id="roi1" name="roi1" value="ROI1">
                 <label for="roi1"> ROI 1</label><br>
                 <input type="checkbox" id="roi2" name="roi2" value="ROI2">
@@ -133,7 +132,7 @@
                     <!-- Export Button -->
                     <tr>
                         <td height="10%">
-                            <div class="container">
+                            <div class="container" style="float: right">
                                 <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
                             </div>
                         </td>
@@ -161,7 +160,6 @@
 
             function import_file(button)
             {
-                /* POTENTIALLY USELESS
                 // Button is pressed text //
                 document.getElementById("action").innerText = "Import " + button.id[6] + " has been pressed!";
 
@@ -196,8 +194,6 @@
 
                 input.click();
                 //URL.revokeObjectURL(input.href)
-
-                */
               
 
             }
@@ -216,17 +212,15 @@
                 // TODO: Send request to port (flask) with files 
                 // Local Port 5000?
 
-                
                 var form = document.getElementById("file_form");
                 var image = document.getElementById("input_1");
                 var mask = document.getElementById("input_2");
                 form.addEventListener('submit', function(e){
-                    image.value = "image_file";
-                    mask.value = " mask_file";
+                    image.value = input_1;
+                    mask.value = input_2;
                     form.submit();
                 });
 
-                /*
                 const flask_port = 'http://localhost:5000/upload';
                 fetch(flask_port)
                 .then(response => response.json())
@@ -234,7 +228,6 @@
                     console.log(json);
                     result.src = json;
                 });
-                */
                 
 
                 // Make route for import and export images in main.py

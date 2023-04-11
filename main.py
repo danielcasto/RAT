@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask import request
 
 app = Flask(__name__)
 
@@ -8,12 +9,17 @@ def index():
     return render_template("index.html", data = data)
 
 @app.route("/upload", methods = ["POST"])
-def upload_image():
+def upload_files():
     # Define Image File
-    return
-def upload_mask():
     # Define Mask File
-    return
+
+    # Return matplot image for html
+
+    # TEST Return same image file #
+    image_file = request.form["input_1"]
+    mask_file = request.form["input_2"]
+
+    return image_file
 
 @app.route("/export")
 def export_file():
