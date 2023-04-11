@@ -99,9 +99,8 @@
                         <td>
                             <div class="container">
                                 <img id="import" src="static/resources/Import_Image.jpeg">
-                                <button class="btn" id="input_1" style="top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import 1</button>
-                                <button class="btn" id="input_2" style="top: 50%; bottom: 50%; height: 15%" onclick=import_file(this);>Import 2</button>
-                                <button class="btn" id="input_3" style="top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import 3</button>
+                                <button class="btn" id="input_1" style="top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import Image File</button>
+                                <button class="btn" id="input_2" style="top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
                             </div>
                         </td>
                     </tr>
@@ -110,23 +109,10 @@
                     <!-- "Terminal" -->
                     <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td id="terminal">
                         <div style="overflow:auto">
-                            <p id="action"> Welcome to RAT Poison </p>
+                            <p id="action"> Welcome to RAT Poison! </p>
                         </div></td></tr>
                     <!-- Generate Button -->
                     <tr><td><div class="container" style="height:100%"><button class="btn" onclick=generate();>Generate Button</button></div></td></tr>
-                </table>
-            </th>
-            <th>
-                <table style="height: 100%">
-                    <tr><td><img id="result" src="static/resources/Render_Placeholder.png" class="center"></td></tr>
-                    <!-- Export Button -->
-                    <tr>
-                        <td height="10%">
-                            <div class="container" style="float: right">
-                                <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
-                            </div>
-                        </td>
-                    </tr>
                 </table>
             </th>
             <!-- ROIs Checkbox Table -->
@@ -143,6 +129,19 @@
                 <input type="checkbox" id="roi5" name="roi5" value="ROI5">
                 <label for="roi5"> ROI 5</label><br>
             </th>
+            <th>
+                <table style="height: 100%">
+                    <tr><td><img id="result" src="static/resources/Render_Placeholder.png" class="center"></td></tr>
+                    <!-- Export Button -->
+                    <tr>
+                        <td height="10%">
+                            <div class="container" style="float: right">
+                                <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </th>
         </tr>
     </table>
 
@@ -158,8 +157,8 @@
             //const {PythonShell} =require('python-shell');
 
             // Input files //
-            var input_1;
-            var input_2;
+            var input_1; // Image File
+            var input_2; // Mask File
             var input_3;
 
             function import_file(button)
@@ -172,13 +171,13 @@
                 input.type = 'file';
                 var file_name = "";
 
+                // Image File and Mask File
+
                 // Filter File Type -- TODO -- Change to correct file types //
                 if(button.id == "input_1")
                     input.accept = '.png'
                 else if(button.id == "input_2")
                     input.accept = '.jpeg'
-                else if(button.id == "input_3")
-                    input.accept = '.txt'
 
                 input.onchange = _ => {
                     let files = Array.from(input.files);
@@ -194,8 +193,6 @@
                         input_1 = files[0];
                     else if(button.id == "input_2")
                         input_2 = files[0];
-                    else if(button.id == "input_3")
-                        input_3 = files[0];
                 };
 
                 input.click();
