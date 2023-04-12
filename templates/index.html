@@ -80,7 +80,7 @@
     <table style="width:100%; height:90%; table-layout:fixed">
         <tr>
             <th width="15%">
-                <form id="file_form" method="post" action="/upload">
+                <form id="file_form" method="POST" action="/upload" enctype="multipart/form-data">
                     <table style="height: 100%" width="100%">
                         <!-- Import Button -->
                         <tr height="30%">
@@ -91,9 +91,9 @@
                                     <button class="btn" id="input_2" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
                                     -->
                                     <label for="input_1">Import Image File</label><br>
-                                    <input type="file" id="input_1" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%"><br><br>
+                                    <input type="file" id="input_1" name="image_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" required="required"><br><br>
                                     <label for="input_2">Import Mask File</label><br>
-                                    <input type="file" id="input_2" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%"><br><br>
+                                    <input type="file" id="input_2" name="mask_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" required="required"><br><br>
                                 </div>
                             </td>
                         </tr>
@@ -133,7 +133,7 @@
                     <th>
                         <td height="10%">
                             <div class="container">
-                                <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
+                                <a href="/export" id = "export_button" class="btn" download="warped_image.nii.gz">Export</a>
                             </div>
                         </td>
                     </th>
