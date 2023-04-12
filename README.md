@@ -16,7 +16,7 @@ of interest, and a background task will create a binary mask for each of the sel
 interest that is exported on completion. Overall, this software solution will require significantly
 less manual work and greatly reduce time that is takes to annotate MRIs.
 
-# [Development Setup](#development-setup)
+# Development Setup
 1. Clone the repository using one of the following options:    
     - __[Option 1]__ Using SSH:
         ```
