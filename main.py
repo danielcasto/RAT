@@ -6,6 +6,7 @@ import base64
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 import numpy as np
 
 app = Flask(__name__)
@@ -28,13 +29,15 @@ def upload_files():
     # Return matplot image for html
 
     # TEST Return same image file #
-    #image_file = request.form["input_1"]
-    #mask_file = request.form["input_2"]
+    image_file = request.files['input_1']
+    mask_file = request.files.get('input_2', '')
 
     # Change this to appropriate time
     time.sleep(1)
 
+    
     fig = Figure()
+    #bg_img = plt.imread("static/resources/Render_Placeholder.png")
     axis = fig.add_subplot(1, 1, 1)
     xs = np.random.rand(100)
     ys = np.random.rand(100)
@@ -42,13 +45,15 @@ def upload_files():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
 
-    # Replace this image with matplot.lib graph
-    #test_image = Image.open("static/resources/Generate_Temp.png")
-    #data = io.BytesIO()
-    #test_image.save(data, "PNG")
+    # Use this line for matplot
     encoded_img_data = base64.b64encode(output.getvalue())
 
-    #image_data=encoded_img_data.decode('utf-8')
+    # Use these lines for image - Does not work
+    #image_test = Image.open(image_file.stream)
+    #data = io.BytesIO()
+    #image_test.save(data, "PNG")
+    #encoded_img_data = base64.b64encode(data.getvalue())
+    # ^^^^
 
     return render_template("index.html", image_data=encoded_img_data.decode('utf-8'))
 
