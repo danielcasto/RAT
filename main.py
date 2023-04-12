@@ -6,7 +6,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np
 
-from os import path
+from os import path, listdir, makedirs
 
 from backend.masker import Masker
 from backend.visualization import plot_image
@@ -16,6 +16,10 @@ from backend.atlas import WaxholmAtlas
 UPLOADS_FOLDER = "uploads"
 OUTPUTS_FOLDER = "outputs"
 ATLAS_PATH = "../Waxholm-v4"
+
+makedirs(UPLOADS_FOLDER, exist_ok=True)
+makedirs(OUTPUTS_FOLDER, exist_ok=True)
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = OUTPUTS_FOLDER
