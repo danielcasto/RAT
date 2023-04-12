@@ -18,6 +18,8 @@ class Registration():
         if mask_path != None:
             self.mask = image_read(mask_path, dimension=3)
             self.fixed = mask_image(self.fixed, mask=self.mask)
+        else:
+            raise NotImplemented("Masks cannot be generated automatically yet so a mask path is required.")
 
     def register(self, type_of_transform = "SyNRA", reg_iterations = (10000, 1000, 100, 0), grad_step = 0.2) -> RegistrationResult:
         result = registration(
