@@ -1,3 +1,8 @@
 pytest==7.1.2
 coverage==7.1.0
 pytest-cov==4.0.0
+Pillow==9.5.0
+Flask==2.2.3
+matplotlib==3.7.1
+nilearn==0.10.0
+antspyx==0.3.8
