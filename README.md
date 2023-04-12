@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [About](#about)
+- [Development Setup](#development-setup)
 - [Team Members](#team-members)
 
 # About
@@ -14,6 +15,31 @@ user-friendly interface will allow selecting a group of images for processing an
 of interest, and a background task will create a binary mask for each of the selected regions of
 interest that is exported on completion. Overall, this software solution will require significantly
 less manual work and greatly reduce time that is takes to annotate MRIs.
+
+# - [Development Setup](#development-setup)
+1. Clone the repository using one of the following options:    
+    - __[Option 1]__ Using SSH:
+        ```
+        git clone git@github.com:danielcasto/RAT.git
+        ```
+    - __[Option 2]__ Using HTTPS:
+        ```
+        git clone https://github.com/danielcasto/RAT.git
+        ```
+        
+2. Install python and pip. This project was developed and testing using ```Python 3.10.11``` and ```Pip 23.0.1```.
+
+3. Install the required python packages using pip. To do so, run the following command in the top-level directory of the cloned repository:
+      ```
+      pip install -r requirements.txt
+      ```
+
+4. Make any desired changes.
+
+5. Preview your changes using flask by executing the following commands:
+      ```
+      python main.py
+      ```
 
 # Team Members
 | Name  | Username |
