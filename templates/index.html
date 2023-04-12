@@ -9,8 +9,8 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
 
-        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        <!--For encoding-->
+        <meta charset="UTF-8">
         
         <title>RAT Poison</title>
         <link rel="custom_button" href="static/button.css">
@@ -31,7 +31,6 @@
                 background-color: rgba(100, 100, 100, 0.2);
                 background-size: 100%;
                 background-repeat: no-repeat;
-                opacity: 0.5;
 
                 size: 20%;
                 font-family: "Franklin Gothic Book";
@@ -116,39 +115,33 @@
             <!-- ROIs Checkbox Table -->
             <th width="7.5%">
                 <header style="margin-bottom: 30px;">Active ROI:</header>
-                <input type="checkbox" id="roi1" name="roi1" value="ROI1">
+                <input type="checkbox" id="roi1" name="roi1" value="ROI1" checked>
                 <label for="roi1"> ROI 1</label><br>
-                <input type="checkbox" id="roi2" name="roi2" value="ROI2">
+                <input type="checkbox" id="roi2" name="roi2" value="ROI2" checked>
                 <label for="roi2"> ROI 2</label><br>
-                <input type="checkbox" id="roi3" name="roi3" value="ROI3">
+                <input type="checkbox" id="roi3" name="roi3" value="ROI3" checked>
                 <label for="roi3"> ROI 3</label><br>
-                <input type="checkbox" id="roi4" name="roi4" value="ROI4">
+                <input type="checkbox" id="roi4" name="roi4" value="ROI4" checked>
                 <label for="roi4"> ROI 4</label><br>
-                <input type="checkbox" id="roi5" name="roi5" value="ROI5">
+                <input type="checkbox" id="roi5" name="roi5" value="ROI5" checked>
                 <label for="roi5"> ROI 5</label><br>
             </th>
             <th>
                 <table style="height: 100%">
-                    <tr><td><img id="result" src="static/resources/Render_Placeholder.png" class="center"></td></tr>
+                    <th><td><img id="result" src="data:image/png;base64,{{image_data}}" class="center"></td></th>
                     <!-- Export Button -->
-                    <tr>
+                    <th>
                         <td height="10%">
                             <div class="container">
                                 <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
                             </div>
                         </td>
-                    </tr>
+                    </th>
                 </table>
             </th>
         </tr>
     </table>
-
-    <p1 id="pyscript_output"></p1>
-    <br>
-    <p1>{{ data }}</p1>
-
     <body>
-        <py-script src="static/test.py"></py-script>
         <script>
             //import {PythonShell} from 'python-shell';
 
@@ -205,13 +198,12 @@
             function generate()
             {
                 // Button is pressed text //
-                document.getElementById("action").innerText = "Generate has been pressed!";
+                document.getElementById("action").innerText = "Your mask is generating...";
 
                 var result = document.getElementById('result');
                 
                 // Need to change this to actual generation //
-                result.src="static/resources/Generate_Temp.png";
-                result.style.opacity = "1.0";
+                result.src="static/resources/Render_Loading.png";
 
                 // TODO: Send request to port (flask) with files 
                 // Local Port 5000?
@@ -267,7 +259,6 @@
 
                 var result = document.getElementById('result');
                 result.src="static/resources/Render_Placeholder.png";
-                result.style.opacity = "0.5";
             }
             function export_file(text, name, type)
             {

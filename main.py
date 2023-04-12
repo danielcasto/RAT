@@ -1,12 +1,24 @@
 from flask import Flask, render_template
 from flask import request
+import time
+from PIL import Image
+import base64
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy as np
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    data = "Hello from RAT!"
-    return render_template("index.html", data = data)
+    
+    test_image = Image.open("static/resources/Render_Placeholder.png")
+    data = io.BytesIO()
+    test_image.save(data, "PNG")
+    encoded_img_data = base64.b64encode(data.getvalue())
+
+    return render_template("index.html", image_data=encoded_img_data.decode('utf-8'))
 
 @app.route("/upload", methods = ["POST"])
 def upload_files():
@@ -16,10 +28,29 @@ def upload_files():
     # Return matplot image for html
 
     # TEST Return same image file #
-    image_file = request.form["input_1"]
-    mask_file = request.form["input_2"]
+    #image_file = request.form["input_1"]
+    #mask_file = request.form["input_2"]
 
-    return image_file
+    # Change this to appropriate time
+    time.sleep(1)
+
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    xs = np.random.rand(100)
+    ys = np.random.rand(100)
+    axis.plot(xs, ys)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+
+    # Replace this image with matplot.lib graph
+    #test_image = Image.open("static/resources/Generate_Temp.png")
+    #data = io.BytesIO()
+    #test_image.save(data, "PNG")
+    encoded_img_data = base64.b64encode(output.getvalue())
+
+    #image_data=encoded_img_data.decode('utf-8')
+
+    return render_template("index.html", image_data=encoded_img_data.decode('utf-8'))
 
 @app.route("/export")
 def export_file():
