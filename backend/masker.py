@@ -21,11 +21,11 @@ class Masker():
         return self
 
     def exportROIMask(self, roi_labels, path):
-        if self.warped_image == None or self.image_transforms == None:
+        if self.warped_image is None or self.image_transforms is None:
             raise TypeError("Image has not been aligned to atlas! Call alignToAtlas first.")
         
-        if roi_labels == None or len(roi_labels) == 0:
-            self.exportAlignedImage(path)
+        if roi_labels is None or len(roi_labels) == 0:
+            self.exportAlignedImage(path) # TODO this may need to be changed
 
         atlas = image_read(self.atlas.map_path)
         roi_idxs = [self.atlas.labels[label] for label in roi_labels]
@@ -36,7 +36,21 @@ class Masker():
 
         return self
     
-    def exportAlignedImage(self, path: str):   
-        image_write(self.warped_image, path)
+    def exportROIMaskedImage(self, mask_path, result_path): # TODO this may not be necessary
+        if self.warped_image is None or self.image_transforms is None:
+            raise TypeError("Image has not been aligned to atlas! Call alignToAtlas first.")
+            
+        image = self.warped_image
+        roi_mask = image_read(mask_path)
 
+        masked_image = mask_image(image, mask=roi_mask)
+
+        image_write(masked_image, filename=result_path)
+
+        return self
+
+    def exportAlignedImage(self, path: str):
+        if self.warped_image is None or self.image_transforms is None:
+            raise TypeError("Image has not been aligned to atlas! Call alignToAtlas first.")
+        
         return self

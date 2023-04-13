@@ -39,6 +39,18 @@ def upload_files():
     image_file = request.files["image_file"]
     mask_file = request.files["mask_file"]
 
+    labels = []
+
+    if "whole_hypothalamus" in request.form:
+        labels.append(request.form["whole_hypothalamus"])
+
+    if "amygdala" in request.form:
+        labels.append(request.form["amygdala"])
+
+    if "ventral_tegmental_area" in request.form:
+        labels.append(request.form["ventral_tegmental_area"])
+    '''Quarantine END'''
+
     if image_file.filename == "" or mask_file.filename == "":
         flash("Please select a mask and image file.")
         return redirect(request.url)
@@ -47,14 +59,18 @@ def upload_files():
     mask_file_path = path.join(UPLOADS_FOLDER, "mask.nii.gz")
     aligned_image_path = path.join(OUTPUTS_FOLDER, "aligned_img.nii.gz")
 
+    roi_mask_path = path.join(OUTPUTS_FOLDER, "roi_mask.nii.gz")
+    roi_masked_image_path = path.join(OUTPUTS_FOLDER, "roi_masked_img.nii.gz")
+
     image_file.save(image_file_path)
     mask_file.save(mask_file_path)
 
     masker = Masker(image_path=image_file_path, image_mask_path=mask_file_path, atlas_path=ATLAS_PATH)
-    masker = masker.alignToAtlas()
+    masker.alignToAtlas()\
+        .exportAlignedImage(path = aligned_image_path)\
+        .exportROIMask(roi_labels = labels, path = roi_mask_path)\
+        .exportROIMaskedImage(mask_path = roi_mask_path, result_path = roi_masked_image_path)
 
-    masker = masker.exportAlignedImage(path = aligned_image_path)
-    
     fig = Figure(figsize=(10,10))
     plt = plot_image(aligned_image_path, overlay_path = masker.atlas.map_path, figure = fig)
     output = io.BytesIO()
@@ -64,6 +80,17 @@ def upload_files():
 
     return render_template("index.html", image_data=encoded_img_data.decode('utf-8'))
 
+@app.route("/export/aligned_img.nii.gz")
+def export_aligned():
+    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "aligned_img.nii.gz")
+
+@app.route("/export/roi_mask.nii.gz")
+def export_roi_mask():
+    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER, "roi_mask.nii.gz"))
+
+@app.route("/export/roi_masked_img.nii.gz")
+def export_roi_masked():
+    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER, "roi_masked_img.nii.gz"), "aligned_img.nii.gz")
 
 @app.route("/export")
 def export_file():

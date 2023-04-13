@@ -79,53 +79,49 @@
     <h1>| R A T&emsp; P O I S O N |</h1>
     <table style="width:100%; height:90%; table-layout:fixed">
         <tr>
-            <th width="15%">
-                <form id="file_form" method="POST" action="/upload" enctype="multipart/form-data">
-                    <table style="height: 100%" width="100%">
-                        <!-- Import Button -->
-                        <tr height="30%">
-                            <td>
-                                <div class="container" src="static/resources/Import_Image.jpeg">
-                                    <!--
-                                    <button class="btn" id="input_1" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import Image File</button>
-                                    <button class="btn" id="input_2" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
-                                    -->
-                                    <label for="input_1">Import Image File</label><br>
-                                    <input type="file" id="input_1" name="image_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" required="required"><br><br>
-                                    <label for="input_2">Import Mask File</label><br>
-                                    <input type="file" id="input_2" name="mask_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" required="required"><br><br>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Reload Button -->
-                        <!--<tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>-->
-                        <!-- "Terminal" -->
-                        <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace; height:50%";><td id="terminal">
-                            <div style="overflow:auto">
-                                <p id="action"> Welcome to RAT Poison! </p>
+            <form id="file_form" method="POST" action="/upload" enctype="multipart/form-data">
+                <th width="15%">
+                        <table style="height: 100%" width="100%">
+                            <!-- Import Button -->
+                            <tr height="30%">
+                                <td>
+                                    <div class="container" src="static/resources/Import_Image.jpeg">
+                                        <!--
+                                        <button class="btn" id="input_1" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import Image File</button>
+                                        <button class="btn" id="input_2" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
+                                        -->
+                                        <label for="input_1">Import Image File</label><br>
+                                        <input type="file" id="input_1" name="image_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" required="required"><br><br>
+                                        <label for="input_2">Import Mask File</label><br>
+                                        <input type="file" id="input_2" name="mask_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" required="required"><br><br>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Reload Button -->
+                            <!--<tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>-->
+                            <!-- "Terminal" -->
+                            <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace; height:50%";><td id="terminal">
+                                <div style="overflow:auto">
+                                    <p id="action"> Welcome to RAT Poison! </p>
+                                </div></td></tr>
+                            <!-- Generate Button -->
+                            <tr style="height: 20%"><td margin="auto"><div class="container" style="height:100%">
+                                <br><button class="btn" onclick=generate()>Generate</button>
+                                <!--<button class="btn" type="submit">Generate</button>-->
                             </div></td></tr>
-                        <!-- Generate Button -->
-                        <tr style="height: 20%"><td margin="auto"><div class="container" style="height:100%">
-                            <br><button class="btn" onclick=generate()>Generate</button>
-                            <!--<button class="btn" type="submit">Generate</button>-->
-                        </div></td></tr>
-                    </table>
-                </form>
-            </th>
-            <!-- ROIs Checkbox Table -->
-            <th width="7.5%">
-                <header style="margin-bottom: 30px;">Active ROI:</header>
-                <input type="checkbox" id="roi1" name="roi1" value="ROI1" checked>
-                <label for="roi1"> ROI 1</label><br>
-                <input type="checkbox" id="roi2" name="roi2" value="ROI2" checked>
-                <label for="roi2"> ROI 2</label><br>
-                <input type="checkbox" id="roi3" name="roi3" value="ROI3" checked>
-                <label for="roi3"> ROI 3</label><br>
-                <input type="checkbox" id="roi4" name="roi4" value="ROI4" checked>
-                <label for="roi4"> ROI 4</label><br>
-                <input type="checkbox" id="roi5" name="roi5" value="ROI5" checked>
-                <label for="roi5"> ROI 5</label><br>
-            </th>
+                        </table>
+                </th>
+                <!-- ROIs Checkbox Table -->
+                <th width="7.5%">
+                    <header style="margin-bottom: 30px;">Active ROI:</header>
+                    <input type="checkbox" id="whole_hypothalamus" name="whole_hypothalamus" value="Hypothalamic region, unspecified" checked>
+                    <label for="whole_hypothalamus"> Hypothalamic region, unspecified</label><br>
+                    <input type="checkbox" id="amygdala" name="amygdala" value="Amygdaloid area, unspecified" checked>
+                    <label for="amygdala"> Amygdaloid area, unspecified</label><br>
+                    <input type="checkbox" id="ventral_tegmental_area" name="ventral_tegmental_area" value="Ventral tegmental area" checked>
+                    <label for="ventral_tegmental_area"> Ventral tegmental area</label><br>
+                </th>
+            </form>
             <th>
                 <table style="height: 100%">
                     <th><td><img id="result" src="data:image/png;base64,{{image_data}}" class="center"></td></th>
@@ -208,13 +204,15 @@
                 // TODO: Send request to port (flask) with files 
                 // Local Port 5000?
 
-                
                 var form = document.getElementById("file_form");
                 var image = document.getElementById("input_1");
                 var mask = document.getElementById("input_2");
+
+                var whole_hypothalamus_checkbox = document.getElementById("whole_hypothalamus")
+                var amygdala_checkbox = document.getElementById("amygdala")
+                var ventral_tegmental_area_checkbox = document.getElementById("ventral_tegmental_area")
+
                 form.addEventListener('submit', function(e){
-                    image.value = "image_file";
-                    mask.value = " mask_file";
                     form.submit();
                 });
 
@@ -260,7 +258,7 @@
                 var result = document.getElementById('result');
                 result.src="static/resources/Render_Placeholder.png";
             }
-            function export_file(text, name, type)
+            /*function export_file(text, name, type)
             {
                 // Button is pressed text //
                 document.getElementById("action").innerText = "Export has been pressed!";
@@ -277,7 +275,7 @@
                 // Save File
                 file.href = URL.createObjectURL(new_file);
                 file.download = name;
-            }
+            }*/
 
         </script>
     </body>
