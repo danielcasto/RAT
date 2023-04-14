@@ -36,6 +36,8 @@ def index():
 
 @app.route("/upload", methods = ["POST", "GET"])
 def upload_files():
+    print("\n/upload request received.")
+
     image_file = request.files["image_file"]
     mask_file = request.files["mask_file"]
 
@@ -49,7 +51,8 @@ def upload_files():
 
     if "ventral_tegmental_area" in request.form:
         labels.append(request.form["ventral_tegmental_area"])
-    '''Quarantine END'''
+
+    print("\nROI Labels: ", labels)
 
     if image_file.filename == "" or mask_file.filename == "":
         flash("Please select a mask and image file.")
@@ -66,11 +69,15 @@ def upload_files():
     mask_file.save(mask_file_path)
 
     masker = Masker(image_path=image_file_path, image_mask_path=mask_file_path, atlas_path=ATLAS_PATH)
+
+    print("Calling alignToAtlas, exportAlignedImage, exportROIMask, exportROIMaskedImage... (This will take a few mintues)")
     masker.alignToAtlas()\
         .exportAlignedImage(path = aligned_image_path)\
         .exportROIMask(roi_labels = labels, path = roi_mask_path)\
         .exportROIMaskedImage(mask_path = roi_mask_path, result_path = roi_masked_image_path)
+    print("Pipeline finished. Files saved to output directory")
 
+    print("Making figure... (This also might take a while)")
     fig = Figure(figsize=(10,10))
     plt = plot_image(aligned_image_path, overlay_path = masker.atlas.map_path, figure = fig)
     output = io.BytesIO()
@@ -78,21 +85,25 @@ def upload_files():
 
     encoded_img_data = base64.b64encode(output.getvalue())
 
+    print("Returning figure...")
     return render_template("index.html", image_data=encoded_img_data.decode('utf-8'))
 
-@app.route("/export/aligned_img.nii.gz")
-def export_aligned():
+@app.route("/export/aligned_img.nii.gz",  methods = ["GET"])
+def export_aligned_img():
+    print("/export/aligned_img.nii.gz request received. Sending back file.")
     return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "aligned_img.nii.gz")
 
-@app.route("/export/roi_mask.nii.gz")
+@app.route("/export/roi_mask.nii.gz", methods = ["GET"])
 def export_roi_mask():
-    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER, "roi_mask.nii.gz"))
+    print("/export/roi_mask.nii.gz request received. Sending back file.")
+    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "roi_mask.nii.gz")
 
-@app.route("/export/roi_masked_img.nii.gz")
-def export_roi_masked():
-    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER, "roi_masked_img.nii.gz"), "aligned_img.nii.gz")
+@app.route("/export/roi_masked_img.nii.gz", methods = ["GET"])
+def export_roi_masked_img():
+    print("/export/roi_masked_img.nii.gz request received. Sending back file.")
+    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "roi_masked_img.nii.gz")
 
-@app.route("/export")
+@app.route("/export") # TODO consider deleting
 def export_file():
     return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "aligned_img.nii.gz")
 
