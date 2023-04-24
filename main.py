@@ -11,11 +11,12 @@ from os import path, listdir, makedirs
 from backend.masker import Masker
 from backend.visualization import plot_image
 from backend.atlas import WaxholmAtlas
+from .download_waxholm import download_waxholm_v4
 
 
 UPLOADS_FOLDER = "uploads"
 OUTPUTS_FOLDER = "outputs"
-ATLAS_PATH = "../Waxholm-v4"
+ATLAS_PATH = "Waxholm-v4"
 
 makedirs(UPLOADS_FOLDER, exist_ok=True)
 makedirs(OUTPUTS_FOLDER, exist_ok=True)
@@ -108,4 +109,5 @@ def export_file():
     return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "aligned_img.nii.gz")
 
 if __name__ == "__main__":
+    download_waxholm_v4()
     app.run()

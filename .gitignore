@@ -131,3 +131,6 @@ dmypy.json
 #misc
 *.nii.gz
 .DS_STORE
+
+# atlas
+Waxholm*/
