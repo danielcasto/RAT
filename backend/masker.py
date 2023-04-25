@@ -36,7 +36,7 @@ class Masker():
 
         return self
     
-    def exportROIMaskedImage(self, mask_path, result_path): # TODO this may not be necessary
+    def exportROIMaskedImage(self, mask_path, result_path):
         if self.warped_image is None or self.image_transforms is None:
             raise TypeError("Image has not been aligned to atlas! Call alignToAtlas first.")
             
@@ -52,5 +52,7 @@ class Masker():
     def exportAlignedImage(self, path: str):
         if self.warped_image is None or self.image_transforms is None:
             raise TypeError("Image has not been aligned to atlas! Call alignToAtlas first.")
+        
+        image_write(self.warped_image, path)
         
         return self

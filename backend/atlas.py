@@ -21,7 +21,6 @@ def get_labels_dictionary(path: str):
 
 
 class WaxholmAtlas():
-    # TODO create waxholm input folder inside project?
     def __init__ (self, folder_path = "../../Waxholm-v4/"):
         self.map_path = path.join(folder_path,"WHS_SD_rat_atlas_v4.nii.gz")
         self.template_path = path.join(folder_path,"WHS_SD_rat_T2star_v1.01.nii.gz")

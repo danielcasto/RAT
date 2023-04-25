@@ -11,7 +11,7 @@ from os import path, listdir, makedirs
 from backend.masker import Masker
 from backend.visualization import plot_image
 from backend.atlas import WaxholmAtlas
-from .download_waxholm import download_waxholm_v4
+from download_waxholm import download_waxholm_v4
 
 
 UPLOADS_FOLDER = "uploads"
@@ -61,8 +61,8 @@ def upload_files():
 
     image_file_path = path.join(UPLOADS_FOLDER, "image.nii.gz")
     mask_file_path = path.join(UPLOADS_FOLDER, "mask.nii.gz")
+    
     aligned_image_path = path.join(OUTPUTS_FOLDER, "aligned_img.nii.gz")
-
     roi_mask_path = path.join(OUTPUTS_FOLDER, "roi_mask.nii.gz")
     roi_masked_image_path = path.join(OUTPUTS_FOLDER, "roi_masked_img.nii.gz")
 
@@ -71,14 +71,22 @@ def upload_files():
 
     masker = Masker(image_path=image_file_path, image_mask_path=mask_file_path, atlas_path=ATLAS_PATH)
 
-    print("Calling alignToAtlas, exportAlignedImage, exportROIMask, exportROIMaskedImage... (This will take a few mintues)")
-    masker.alignToAtlas()\
-        .exportAlignedImage(path = aligned_image_path)\
-        .exportROIMask(roi_labels = labels, path = roi_mask_path)\
-        .exportROIMaskedImage(mask_path = roi_mask_path, result_path = roi_masked_image_path)
+    print("Running pipeline... (This will take a while)")
+    print("Step 1: align to atlas...")
+    masker.alignToAtlas()
+
+    print("Step 2: export aligned image...")
+    masker.exportAlignedImage(path = aligned_image_path)
+
+    print("Step 3: export ROI mask...")
+    masker.exportROIMask(roi_labels = labels, path = roi_mask_path)
+
+    print("Step 4: export ROI masked image...")
+    masker.exportROIMaskedImage(mask_path = roi_mask_path, result_path = roi_masked_image_path)
+
     print("Pipeline finished. Files saved to output directory")
 
-    print("Making figure... (This also might take a while)")
+    print("Making figure... (This will take a while)")
     fig = Figure(figsize=(10,10))
     plt = plot_image(aligned_image_path, overlay_path = masker.atlas.map_path, figure = fig)
     output = io.BytesIO()
