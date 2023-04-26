@@ -12,7 +12,7 @@ class Masker():
         self.atlas = WaxholmAtlas(atlas_path)
 
     def alignToAtlas(self):
-        registration = Registration(fixed_path = self.image_path, moving_path = self.atlas.template_path, mask_path = self.image_mask_path)
+        registration = Registration(fixed_path = self.image_path, moving_path = self.atlas.masked_template_path, mask_path = self.image_mask_path)
         result = registration.register()
 
         self.warped_image = result.warped_fixed
@@ -25,7 +25,7 @@ class Masker():
             raise TypeError("Image has not been aligned to atlas! Call alignToAtlas first.")
         
         if roi_labels is None or len(roi_labels) == 0:
-            self.exportAlignedImage(path) # TODO this may need to be changed
+            self.exportAlignedImage(path)
 
         atlas = image_read(self.atlas.map_path)
         roi_idxs = [self.atlas.labels[label] for label in roi_labels]

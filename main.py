@@ -53,7 +53,7 @@ def upload_files():
     if "ventral_tegmental_area" in request.form:
         labels.append(request.form["ventral_tegmental_area"])
 
-    print("\nROI Labels: ", labels)
+    print("\nROI Labels: ", labels, "\n")
 
     if image_file.filename == "" or mask_file.filename == "":
         flash("Please select a mask and image file.")
@@ -71,7 +71,7 @@ def upload_files():
 
     masker = Masker(image_path=image_file_path, image_mask_path=mask_file_path, atlas_path=ATLAS_PATH)
 
-    print("Running pipeline... (This will take a while)")
+    print("Running pipeline: (This will take a while)")
     print("Step 1: align to atlas...")
     masker.alignToAtlas()
 
@@ -86,7 +86,7 @@ def upload_files():
 
     print("Pipeline finished. Files saved to output directory")
 
-    print("Making figure... (This will take a while)")
+    print("\nMaking figure... (This will take a while)")
     fig = Figure(figsize=(10,10))
     plt = plot_image(aligned_image_path, overlay_path = masker.atlas.map_path, figure = fig)
     output = io.BytesIO()
@@ -111,10 +111,6 @@ def export_roi_mask():
 def export_roi_masked_img():
     print("/export/roi_masked_img.nii.gz request received. Sending back file.")
     return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "roi_masked_img.nii.gz")
-
-@app.route("/export") # TODO consider deleting
-def export_file():
-    return send_from_directory(path.join(app.root_path, OUTPUTS_FOLDER), "aligned_img.nii.gz")
 
 if __name__ == "__main__":
     download_waxholm_v4()

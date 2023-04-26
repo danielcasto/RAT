@@ -28,7 +28,7 @@ class Registration():
             mask=self.mask, 
             type_of_transform=type_of_transform, 
             reg_iterations=reg_iterations,
-            grad_step = grad_step )
-        
+            grad_step = grad_step
+            )
         
         return RegistrationResult(result)
