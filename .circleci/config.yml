@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Run tests
           # This assumes pytest is installed via the install-package step above
-          command: pip install --upgrade pip; pytest --cov
+          command: /home/circleci/.pyenv/versions/3.10.2/bin/python3.10 -m pip install --upgrade pip; pytest --cov
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
