@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!--meta name="viewport" content="width=device-width"-->
+    <!-- Button hover from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_button_on_image -->
+
+        <!-- Dependencies from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+
+        <!--For encoding-->
+        <meta charset="UTF-8">
+        
+        <title>RAT Poison</title>
+        <link rel="custom_button" href="static/button.css">
+        <style>
+            body 
+            {
+                background-image: url("static/resources/Brain_BG_1.png");
+                background-size: 100%;
+                color: white;
+            }
+            h1
+            {
+                size: 20%;
+                font-family: "Franklin Gothic Book";
+            }
+            th
+            {
+                background-color: rgba(100, 100, 100, 0.2);
+                background-size: 100%;
+                background-repeat: no-repeat;
+
+                size: 20%;
+                font-family: "Franklin Gothic Book";
+            }
+
+            .container {
+                position: relative;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .container img {
+                width: 100%;
+                height: auto;
+            }
+
+            img{
+                width: 80%;
+                height: auto;
+                object-fit: cover;
+            }
+
+            .center{
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .container .btn {
+                position: absolute;
+                top: 50%;   
+                background-color: #555;
+                color: white;
+                font-size: 16px;
+                padding: 24px 24px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                text-align: center;
+                align-items: center;
+            }
+
+            .hide_submit {
+                visibility: hidden;
+                display: none;
+            }
+            
+        </style>
+    </head>
+
+    <h1>| R A T&emsp; P O I S O N |</h1>
+    <table style="width:100%; height:90%; table-layout:fixed">
+        <tr>
+            <form id="file_form" method="POST" action="/upload" enctype="multipart/form-data">
+                <th width="15%">
+                        <table style="height: 100%" width="100%">
+                            <!-- Import Button -->
+                            <tr height="30%">
+                                <td>
+                                    <div class="container" src="static/resources/Import_Image.jpeg">
+                                        <!--
+                                        <button class="btn" id="input_1" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import Image File</button>
+                                        <button class="btn" id="input_2" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
+                                        -->
+                                        <label for="input_1">Import Image File</label><br>
+                                        <input type="file" id="input_1" name="image_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" required="required"><br><br>
+                                        <label for="input_2">Import Mask File</label><br>
+                                        <input type="file" id="input_2" name="mask_file" accept=".nii.gz, .png" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" required="required"><br><br>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Reload Button -->
+                            <!--<tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>-->
+                            <!-- "Terminal" -->
+                            <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace; height:50%";><td id="terminal">
+                                <div style="overflow:auto">
+                                    <p id="action"> Welcome to RAT Poison! </p>
+                                </div></td></tr>
+                            <!-- Generate Button -->
+                            <tr style="height: 20%"><td margin="auto"><div class="container" style="height:100%">
+                                <br><button class="btn" onclick=generate()>Generate</button>
+                            </div></td></tr>
+                        </table>
+                </th>
+                <!-- ROIs Checkbox Table -->
+                <th width="7.5%">
+                    <header style="margin-bottom: 30px;">Active ROI:</header>
+                    <input type="checkbox" id="whole_hypothalamus" name="whole_hypothalamus" value="Hypothalamic region, unspecified" checked>
+                    <label for="whole_hypothalamus"> Hypothalamic region, unspecified</label><br>
+                    <input type="checkbox" id="amygdala" name="amygdala" value="Amygdaloid area, unspecified" checked>
+                    <label for="amygdala"> Amygdaloid area, unspecified</label><br>
+                    <input type="checkbox" id="ventral_tegmental_area" name="ventral_tegmental_area" value="Ventral tegmental area" checked>
+                    <label for="ventral_tegmental_area"> Ventral tegmental area</label><br>
+                </th>
+            </form>
+            <th>
+                <table style="height: 100%">
+                    <th><td><img id="result" src="data:image/png;base64,{{image_data}}" class="center"></td></th>
+                    <!-- Export Button -->
+                    <th>
+                        <td height="10%">
+                            <div class="container">
+                                <form id="export_aligned_img_form" method="GET" action="/export/aligned_img.nii.gz">
+                                    <input type="submit", id="align_btn" class="hide_submit"></input>
+                                </form>
+                                <form id="export_mask_form" method="GET" action="/export/roi_mask.nii.gz">
+                                    <input type="submit", id="mask_btn" class="hide_submit"></input>
+                                </form>
+                                <form id="export_masked_img_form" method="GET" action="/export/roi_masked_img.nii.gz">
+                                    <input type="submit", id="masked_btn" class="hide_submit"></input>
+                                </form>
+                                <button class="btn", onclick=export_files()>Export</button>
+                            </div>
+                        </td>
+                    </th>
+                </table>
+            </th>
+        </tr>
+    </table>
+    <body>
+        <script>
+            //import {PythonShell} from 'python-shell';
+
+            //const {PythonShell} =require('python-shell');
+
+            // Input files //
+            var input_1; // Image File: .nii.gz
+            var input_2; // Mask File: .nii.gz
+            var export_file;
+
+            function import_file(button)
+            {
+                /* POTENTIALLY USELESS
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Import " + button.id[6] + " has been pressed!";
+
+                // Source: https://codepen.io/udaymanvar/pen/MWaePBY //
+                let input = document.createElement('input');
+                input.type = 'file';
+                var file_name = "";
+
+                // Image File and Mask File
+
+                // Filter File Type -- TODO -- Change to correct file types //
+                if(button.id == "input_1")
+                    input.accept = '.nii.gz'
+                else if(button.id == "input_2")
+                    input.accept = '.nii.gz'
+
+                input.onchange = _ => {
+                    let files = Array.from(input.files);
+                    file_name = files[0].name;
+
+                    // Change Button Name //
+                    button.innerText=file_name;
+
+                    console.log(files);
+
+                    // Fill in Needed Files //
+                    if(button.id == "input_1")
+                        input_1 = files[0];
+                    else if(button.id == "input_2")
+                        input_2 = files[0];
+                };
+
+                input.click();
+                //URL.revokeObjectURL(input.href)
+
+                */
+              
+
+            }
+            // Run Back-end Code here! //
+            function generate()
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Your mask is generating...";
+
+                var result = document.getElementById('result');
+                
+                // Need to change this to actual generation //
+                result.src="static/resources/Render_Loading.png";
+
+                // TODO: Send request to port (flask) with files 
+                // Local Port 5000?
+
+                var form = document.getElementById("file_form");
+                var image = document.getElementById("input_1");
+                var mask = document.getElementById("input_2");
+
+                var whole_hypothalamus_checkbox = document.getElementById("whole_hypothalamus");
+                var amygdala_checkbox = document.getElementById("amygdala");
+                var ventral_tegmental_area_checkbox = document.getElementById("ventral_tegmental_area");
+
+                form.addEventListener('submit', function(e){
+                    form.submit();
+                });
+
+                /*
+                const flask_port = 'http://localhost:5000/upload';
+                fetch(flask_port)
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json);
+                    result.src = json;
+                });
+                */
+                
+
+                // Make route for import and export images in main.py
+
+                // Attempt 1 //
+                /*PythonShell.run(
+                    'test.py',
+                    null,
+                    function(err){
+                        if(err) throw err;
+                        console.log('finished');
+                    }
+                )
+                // Attempt 2
+                $.ajax({
+                    url:"test.py",
+                    context: document.body
+                }).done(function() {
+                    alert('finished python script');;
+                });
+                */
+                //var update = document.createTextNode("\nPython File Running...");
+
+                //document.getElementById("action").appendChild(update);
+            }
+
+            function reload()
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Reload has been pressed!";
+
+                var result = document.getElementById('result');
+                result.src="static/resources/Render_Placeholder.png";
+            }
+
+            async function export_files()
+            {
+                document.getElementById("align_btn").click()
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                document.getElementById("mask_btn").click()
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                document.getElementById("masked_btn").click()
+            }
+            /*function export_file(text, name, type)
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Export has been pressed!";
+
+                // Source: https://stackoverflow.com/questions/13405129/create-and-save-a-file-with-javascript //
+                var file = document.getElementById("export_button");
+                var new_file = new Blob([text], {type: type});
+
+                // For testing only -- TODO //
+                new_file = input_1;
+
+                // TODO: Send request for .nii.gz file (mask) export
+
+                // Save File
+                file.href = URL.createObjectURL(new_file);
+                file.download = name;
+            }*/
+
+        </script>
+    </body>
+
+    <!--
+    <body>
+        !-- Code taken from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal setup --
+        <script>
+            $('body').terminal({
+                hello: function(what) {
+                    this.echo('Hello, ' + what + '. Welcome to this terminal.');
+                }
+            }, {
+                greetings: 'RAT Poison Terminal'
+            });
+        </script>
+    </body>
+    -->
+
+</html>

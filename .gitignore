@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#misc
+*.nii.gz
+.DS_STORE
+
+# atlas
+Waxholm*/

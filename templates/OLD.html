@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!--meta name="viewport" content="width=device-width"-->
+    <!-- Button hover from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_button_on_image -->
+
+        <!-- Dependencies from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css"/>
+
+        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        
+        <title>RAT Poison</title>
+        <link rel="custom_button" href="static/button.css">
+        <style>
+            body 
+            {
+                background-image: url("static/resources/Brain_BG_1.png");
+                background-size: 100%;
+                color: white;
+            }
+            h1
+            {
+                size: 20%;
+                font-family: "Franklin Gothic Book";
+            }
+            th
+            {
+                background-color: rgba(100, 100, 100, 0.2);
+                background-size: 100%;
+                background-repeat: no-repeat;
+                opacity: 0.5;
+
+                size: 20%;
+                font-family: "Franklin Gothic Book";
+            }
+
+            .container {
+                position: relative;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .container img {
+                width: 100%;
+                height: auto;
+            }
+
+            img{
+                width: 80%;
+                height: auto;
+                object-fit: cover;
+            }
+
+            .center{
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .container .btn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                background-color: #555;
+                color: white;
+                font-size: 16px;
+                padding: 12px 24px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            .container .btn:hover
+            {
+                background-color: black;
+            }
+            
+        </style>
+    </head>
+
+    <h1>| R A T&emsp; P O I S O N |</h1>
+    <table style="width:100%; height:90%; table-layout:fixed">
+        <tr>
+            <th width="15%">
+                <form id="file_form" method="post">
+                    <table style="height: 100%" width="100%">
+                        <!-- Import Button -->
+                        <tr height="30%">
+                            <td>
+                                <div class="container">
+                                    <img id="import" src="static/resources/Import_Image.jpeg">
+                                    <button class="btn" id="input_1" style="width: 80%; height: 10%; top: 25%; bottom: 75%; height: 15%" onclick=import_file(this);>Import Image File</button>
+                                    <button class="btn" id="input_2" style="width: 80%; height: 10%; top: 75%; bottom: 25%; height: 15%" onclick=import_file(this);>Import Mask File</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- Reload Button -->
+                        <tr height="10%"><td><div class="container"><button class="btn" onclick=reload();>Reload</button></div></td></tr>
+                        <!-- "Terminal" -->
+                        <tr height="35%" width="90%" style="background-color: black; font-family:'Courier New', Courier, monospace";><td id="terminal">
+                            <div style="overflow:auto">
+                                <p id="action"> Welcome to RAT Poison! </p>
+                            </div></td></tr>
+                        <!-- Generate Button -->
+                        <tr><td><div class="container" style="height:100%"><input type="submit" class="btn" onclick=generate();>Generate Button</button></div></td></tr>
+                    </table>
+                </form>
+            </th>
+            <!-- ROIs Checkbox Table -->
+            <th width="7.5%">
+                <header style="margin-bottom: 30px;">Select ROIs</header>
+                <input type="checkbox" id="roi1" name="roi1" value="ROI1">
+                <label for="roi1"> ROI 1</label><br>
+                <input type="checkbox" id="roi2" name="roi2" value="ROI2">
+                <label for="roi2"> ROI 2</label><br>
+                <input type="checkbox" id="roi3" name="roi3" value="ROI3">
+                <label for="roi3"> ROI 3</label><br>
+                <input type="checkbox" id="roi4" name="roi4" value="ROI4">
+                <label for="roi4"> ROI 4</label><br>
+                <input type="checkbox" id="roi5" name="roi5" value="ROI5">
+                <label for="roi5"> ROI 5</label><br>
+            </th>
+            <th>
+                <table style="height: 100%">
+                    <tr><td><img id="result" src="static/resources/Render_Placeholder.png" class="center"></td></tr>
+                    <!-- Export Button -->
+                    <tr>
+                        <td height="10%">
+                            <div class="container" style="float: right">
+                                <a href="" id = "export_button" class="btn" onclick="export_file('test', 'ExportFile', 'text/plain')">Export</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </th>
+        </tr>
+    </table>
+
+    <p1 id="pyscript_output"></p1>
+    <br>
+    <p1>{{ data }}</p1>
+
+    <body>
+        <py-script src="static/test.py"></py-script>
+        <script>
+            //import {PythonShell} from 'python-shell';
+
+            //const {PythonShell} =require('python-shell');
+
+            // Input files //
+            var input_1; // Image File: .nii.gz
+            var input_2; // Mask File: .nii.gz
+            var export_file;
+
+            function import_file(button)
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Import " + button.id[6] + " has been pressed!";
+
+                // Source: https://codepen.io/udaymanvar/pen/MWaePBY //
+                let input = document.createElement('input');
+                input.type = 'file';
+                var file_name = "";
+
+                // Image File and Mask File
+
+                // Filter File Type -- TODO -- Change to correct file types //
+                if(button.id == "input_1")
+                    input.accept = '.nii.gz'
+                else if(button.id == "input_2")
+                    input.accept = '.nii.gz'
+
+                input.onchange = _ => {
+                    let files = Array.from(input.files);
+                    file_name = files[0].name;
+
+                    // Change Button Name //
+                    button.innerText=file_name;
+
+                    console.log(files);
+
+                    // Fill in Needed Files //
+                    if(button.id == "input_1")
+                        input_1 = files[0];
+                    else if(button.id == "input_2")
+                        input_2 = files[0];
+                };
+
+                input.click();
+                //URL.revokeObjectURL(input.href)
+              
+
+            }
+            // Run Back-end Code here! //
+            function generate()
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Generate has been pressed!";
+
+                var result = document.getElementById('result');
+                
+                // Need to change this to actual generation //
+                result.src="static/resources/Generate_Temp.png";
+                result.style.opacity = "1.0";
+
+                // TODO: Send request to port (flask) with files 
+                // Local Port 5000?
+
+                var form = document.getElementById("file_form");
+                var image = document.getElementById("input_1");
+                var mask = document.getElementById("input_2");
+                form.addEventListener('submit', function(e){
+                    image.value = input_1;
+                    mask.value = input_2;
+                    form.submit();
+                });
+
+                const flask_port = 'http://localhost:5000/upload';
+                fetch(flask_port)
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json);
+                    result.src = json;
+                });
+                
+
+                // Make route for import and export images in main.py
+
+                // Attempt 1 //
+                /*PythonShell.run(
+                    'test.py',
+                    null,
+                    function(err){
+                        if(err) throw err;
+                        console.log('finished');
+                    }
+                )
+                // Attempt 2
+                $.ajax({
+                    url:"test.py",
+                    context: document.body
+                }).done(function() {
+                    alert('finished python script');;
+                });
+                */
+                //var update = document.createTextNode("\nPython File Running...");
+
+                //document.getElementById("action").appendChild(update);
+            }
+            function reload()
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Reload has been pressed!";
+
+                var result = document.getElementById('result');
+                result.src="static/resources/Render_Placeholder.png";
+                result.style.opacity = "0.5";
+            }
+            function export_file(text, name, type)
+            {
+                // Button is pressed text //
+                document.getElementById("action").innerText = "Export has been pressed!";
+
+                // Source: https://stackoverflow.com/questions/13405129/create-and-save-a-file-with-javascript //
+                var file = document.getElementById("export_button");
+                var new_file = new Blob([text], {type: type});
+
+                // For testing only -- TODO //
+                new_file = input_1;
+
+                // TODO: Send request for .nii.gz file (mask) export
+
+                // Save File
+                file.href = URL.createObjectURL(new_file);
+                file.download = name;
+            }
+
+        </script>
+    </body>
+
+    <!--
+    <body>
+        !-- Code taken from https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288 for terminal setup --
+        <script>
+            $('body').terminal({
+                hello: function(what) {
+                    this.echo('Hello, ' + what + '. Welcome to this terminal.');
+                }
+            }, {
+                greetings: 'RAT Poison Terminal'
+            });
+        </script>
+    </body>
+    -->
+
+</html>
